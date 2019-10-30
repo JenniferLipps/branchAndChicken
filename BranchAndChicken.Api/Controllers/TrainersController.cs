@@ -28,53 +28,65 @@ namespace BranchAndChicken.Api.Controllers
             return repo.Get(name);
         }
 
+        [HttpGet("{id:int}")]
+        public ActionResult<Trainer> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         //[HttpGet("{specialty}")]
         //public ActionResult<Trainer> GetBySpecialty(string specialty)
         //{
         //    throw new NotImplementedException();
         //}
 
-        //[HttpDelete("{name}")]
-        //public IActionResult DeleteTrainer(string name)
-        //{
-        //    var repo = new TrainerRepository();
-        //    repo.Remove(name);
+        [HttpDelete("{name}")]
+        public IActionResult DeleteTrainer(string name)
+        {
+            var repo = new TrainerRepository();
+            repo.Remove(name);
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateTrainer(UpdateTrainerCommand updatedTrainerCommand, Guid id)
-        //{
-        //    var repo = new TrainerRepository();
+        [HttpPut("{id}")]
+        public IActionResult UpdateTrainer(UpdateTrainerCommand updatedTrainerCommand, int id)
+        {
+            var repo = new TrainerRepository();
 
-        //    var updatedTrainer = new Trainer
-        //    {
-        //        FullName = updatedTrainerCommand.FullName,
-        //        YearsOfExperience = updatedTrainerCommand.YearsOfExperience,
-        //        Specialty = updatedTrainerCommand.Specialty
-        //    };
+            var updatedTrainer = new Trainer
+            {
+                Name = updatedTrainerCommand.Name,
+                YearsOfExperience = updatedTrainerCommand.YearsOfExperience,
+                Specialty = updatedTrainerCommand.Specialty
+            };
 
-        //    var trainerThatGotUpdated = repo.Update(updatedTrainer, id);
+            var trainerThatGotUpdated = repo.Update(updatedTrainer, id);
 
-        //    return Ok(trainerThatGotUpdated);
-        //}
+            if (trainerThatGotUpdated == null)
+            {
+                return NotFound("Could not update trainer.");
+            }
 
-        //[HttpPost]
-        //public IActionResult CreateTrainer(AddTrainerCommand newTrainerCommand)
-        //{
-        //    var newTrainer = new Trainer
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        FullName = newTrainerCommand.FullName,
-        //        YearsOfExperience = newTrainerCommand.YearsOfExperience,
-        //        Specialty = newTrainerCommand.Specialty,
-        //    };
+            return Ok(trainerThatGotUpdated);
+                
+        }
 
-        //    var repo = new TrainerRepository();
-        //    var trainerThatGotCreated = repo.Add(newTrainer);
+        [HttpPost]
+        public IActionResult CreateTrainer(AddTrainerCommand newTrainerCommand)
+        {
+            var newTrainer = new Trainer
+            {
+                Id = 1,
+                Name = newTrainerCommand.Name,
+                YearsOfExperience = newTrainerCommand.YearsOfExperience,
+                Specialty = newTrainerCommand.Specialty,
+            };
 
-        //    return Created($"api/trainers/{trainerThatGotCreated.FullName}", trainerThatGotCreated);
-        //}
+            var repo = new TrainerRepository();
+            var trainerThatGotCreated = repo.Add(newTrainer);
+
+            return Created($"api/trainers/{trainerThatGotCreated.Name}", trainerThatGotCreated);
+        }
     }
 }
